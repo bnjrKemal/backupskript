@@ -1,0 +1,77 @@
+function islem(p: player, b: block):
+	set {_demir} to 50 * (number of all iron ingots in {_b})
+	set {_altin} to 150 * number of all gold ingots in {_b}
+	set {_zumrut} to 450 * number of all emeralds in {_b}
+	set {_elmas} to 900 * number of all diamonds in {_b}
+	set {_demirb} to 450 * number of all iron blocks in {_b}
+	set {_altinb} to 1350 * number of all gold blocks in {_b}
+	set {_zumrutb} to 4050 * number of all emerald blocks in {_b}
+	set {_prizmarin} to 2700 * number of all prismarine shard in {_b}
+	set {_elmasb} to 8100 * number of all diamond blocks in {_b}
+	send "&a%number of all iron ingots in {_b}% demir &f|| &e%number of all gold ingots in {_b}% altın &f|| &a%number of all emeralds in {_b}% zümrüt &f|| &e%number of all diamonds in {_b}% elmas &f|| &a%number of all iron blocks in {_b}% demir blok &f|| &e%number of all gold blocks in {_b}% altın blok &f|| &a%number of all emerald blocks in {_b}% zümrüt blok &f|| &e%number of all diamond blocks in {_b}% elmas blok &f|| &e%number of all prismarine shard in {_b}% prizmarin &bsatıldı." to {_p}
+	set {_toplam} to ({_demir}+{_altin}+{_zumrut}+{_elmas}+{_demirb}+{_altinb}+{_zumrutb}+{_elmasb}+{_prizmarin})
+	send "&6Toplam: &a%{_toplam}% TL hesabına aktarıldı." to {_p}
+	remove all iron ingots, gold ingots, emeralds, diamonds, iron blocks, gold blocks, emerald blocks, prismarine shard and diamond blocks from {_b}
+	add {_toplam} to {_p}'s balance
+on sign change:
+	player has permission "lord.autosell"
+	line 1 is "[otosat]"
+	loop all blocks in radius 1 of block behind the event-block:
+		if line 1 of loop-block is not "&5&lOto Sandık":
+			set line 1 to "&5&lOto Sandık"
+			set line 2 to "%player%"
+			set line 3 to "Beni sağ tıkla"
+			set line 4 to "ve sat!"
+		else:
+			set line 1 of event-block to "&4Birden"
+			set line 2 of event-block to "&4fazla"
+			set line 3 of event-block to "&4yapamazsın..."
+			set line 4 of event-block to "&4&l!!!"
+			stop loop
+on rightclick:
+	if event-block is chest or trapped chest:
+		loop all blocks in radius 1 of event-block:
+			line 1 of loop-block is "&5&lOto Sandık"
+			if line 2 of loop-block is not "%player%":
+				send "&cTabelayı ancak sahibi açabilir."
+				cancel event
+				stop loop
+	if event-block is wall sign:
+		line 1 of event-block is "&5&lOto Sandık"
+		if line 2 of event-block is "%player%":
+			if block behind the event-block is chest or trapped chest:
+				islem(player, block behind the event-block)
+		else:
+			send "&cBu sandık senin değil!"
+on break:
+	if event-block is chest or trapped chest:
+		loop all blocks in radius 1 of event-block:
+			if line 1 of loop-block is "&5&lOto Sandık":
+				cancel event
+				if line 2 of loop-block is not "%player%":
+					send "&cOto sandığını ancak sahibi kırabilir."
+					cancel event
+	if event-block is sign:
+		player is not op
+		line 1 of event-block is "&5&lOto Sandık"
+		if line 2 of event-block is not "%player%":
+			send "&cTabelayı ancak sahibi kırabilir."
+			cancel event
+on place:
+	if event-block is hopper:
+		loop all blocks in radius 1 of event-block:
+			loop-block-1 is chest or trapped chest:
+				loop all blocks in radius 1 of loop-block-1:
+					line 1 of loop-block-2 is "&5&lOto Sandık"
+					line 2 of loop-block-2 is not "%player%"
+					cancel event
+					send "&cOto sandığını huniyle çekemezsin."
+	if event-block is chest or trapped chest:
+		loop all blocks in radius 1 of event-block:
+			if loop-block-1 is chest:
+				loop all blocks in radius 1 of loop-block-1:
+					loop-block-2 is sign:
+						if line 1 of loop-block-2 is "&5&lOto Sandık":
+							if line 2 of loop-block-2 is not "%player%":
+								cancel event
+								send "&cOto sandığıyla sandığını birleştiremezsin."
