@@ -1,0 +1,26 @@
+# (with SkinRestorer and TuSKe)
+# {skinSKPlayer::%player%}
+command /skindeğiştir:
+	trigger:
+		skinSKPlayerGUI(player)
+function skinSKPlayerGUI(p : player):
+	open virtual hopper named "&1&lSkinimi değiştir" to {_p}
+	make gui slot 0 of {_p} with skull of {_p} named "&7&l##0" with lore "", "&f• Skinimi sıfırla" and "" to run function skinSKPlayer({_p}, "sil")
+	make gui slot 1 of {_p} with (skull of "Oberfail" parsed as offline player) named "&7&l##1" with lore "", "&f• Çöp Adam Skini" and "" to run function skinSKPlayer({_p}, "Oberfail")
+	make gui slot 2 of {_p} with (skull of "SayaSIAPA" parsed as offline player) named "&7&l##2" with lore "", "&f• Gökyüzü Adam" and "" to run function skinSKPlayer({_p}, "SayaSIAPA")
+	make gui slot 3 of {_p} with (skull of "yqza" parsed as offline player) named "&7&l##3" with lore "", "&f• Dedektif" and "" to run function skinSKPlayer({_p}, "yqza")
+	make gui slot 4 of {_p} with (skull of "_Revolycioner_" parsed as offline player) named "&7&l##4" with lore "", "&f• Kel Adam" and "" to run function skinSKPlayer({_p}, "_Revolycioner_")
+function skinSKPlayer(p : player, t : text):
+	if {skinSKPlayer::%{_p}%} is not set:
+		set {skinSKPlayer::%{_p}%} to now
+	else if {skinSKPlayer::%{_p}%} > now:
+		make gui slot integers between 0 and 4 of {_p} with barrier named "&c&l##" with lore "&cHer 5 dakikada bir işlem yapabilirsin." and "&cAçılacak zaman: %{skinSKPlayer::%{_p}%} formatted with ""HH:mm:ss""%" to nothing
+		wait 3 seconds
+	else if {skinSKPlayer::%{_p}%} <= now:
+		add 5 minutes to {skinSKPlayer::%{_p}%}
+		if {_t} is not "sil":
+			execute console command "skin set %{_p}% %{_t}%"
+		else:
+			execute console command "skin clear %{_p}%"
+	{_p} has gui
+	skinSKPlayerGUI({_p})
