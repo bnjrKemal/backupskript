@@ -1,0 +1,62 @@
+command /ad [<text>]:
+	permission: admin.chat
+	trigger:
+		arg-1 is "s":
+			{adminchat.%player%} is not set:
+				set {adminchat.%player%} to true
+				send "&aAdmin Sohbet bölümüne katıldın!"
+				stop trigger
+			else:
+				delete {adminchat.%player%}
+				send "&cAdmin Sohbet bölümünden çıktın!"
+				stop trigger
+		arg-1 is "k":
+			{adminkomut.%player%} is not set:
+				set {adminkomut.%player%} to true
+				enable social spy for player
+				send "&aKomutlar görünür!"
+				stop trigger
+			else:
+				delete {adminkomut.%player%}
+				disable social spy for player
+				send "&cKomutlar görünmez!"
+				stop trigger
+		arg-1 is "c":
+			send "&7&l&m---&6&lAdmin Paneli&7&l&m------"
+			send ""
+			{adminkomut.%player%} is not set:
+				set {ak.%player%} to "&4Kapalı" 
+			{adminkomut.%player%} is set:
+				set {ak.%player%} to "&2Açık" 
+			send "&eKomut görme &f» %{ak.%player%}%"
+			{adminchat.%player%} is not set:
+				set {ac.%player%} to "&4Kapalı" 
+			{adminchat.%player%} is set:
+				set {ac.%player%} to "&2Açık" 
+			send "&eAdmin Sohbet &f» %{ac.%player%}%"
+			send ""
+			send "&7&l&m---&6&lAdmin Paneli&7&l&m------"
+			stop trigger
+		else:
+			send "&cHatalı kullanım &f» &e/ad &7[s/k/c]"
+on chat:
+	if {adminchat.%player%} is set:
+		loop all players:
+			if loop-player has permission "admin.chat":
+				cancel event
+				send "&7&l[ADMINCHAT] &5&l%player% &f&l» &e&l%message%" to loop-player
+on command:
+	if command sender is player:
+		if command is not "l" or "login" or "changepassword" or "register" or "reg" or "güvenlik" or "guvenlik" or "kod" or "opskilit" or "swkilit":
+			loop all players:
+				loop-player is not player:
+					if {adminkomut.%loop-player%} is set:
+						send "&7&l[ADMINKOMUT] &5&l%player% &f&l» &4&l/&c&l%full command%" to loop-player
+	if command sender is console:
+		if command is not "manudelsub" or "manuaddsub" or "manuaddv" or "manudelv":
+			loop all players:
+				if {adminkomut.%loop-player%} is set:
+					send "&7&l[ADMINKOMUT] &5&lKONSOL &f&l» &4&l/&c&l%full command%" to loop-player
+on quit:
+	delete {adminkomut.%player%}
+	delete {adminchat.%player%}
