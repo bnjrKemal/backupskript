@@ -1,0 +1,92 @@
+# otosat ve ototopla skripti
+
+# otomatiksat otomatiktopla on break event eklenecek bir kaç güne
+
+# Sadece burayı ayarla.
+# -------------------------------------------------------------------------------------------
+function OtomatikSatOtomatikToplacontrol(p : player):
+
+	# otosat&ototopla
+	OtomatikSatOtomatikToplaVariable({_p}, "otosat", "lapis lazuli ore") # %{otosat::lapis::player}%
+	OtomatikSatOtomatikToplaVariable({_p}, "ototopla", "lapis lazuli ore") # %{ototopla::lapis::player}%
+	
+	# GUI
+	make gui slot 9 of {_p} with {x::lapis lazuli ore.item.otosat} named "&bOtomatik Satış" with lore "%{x::lapis lazuli ore.name.otosat}%" to run function OtomatikSatOtomatikToplaguncel({_p}, "otosat", "lapis lazuli ore")
+	make gui slot 18 of {_p} with {x::lapis lazuli ore.item.ototopla} named "&bOtomatik Toplama" with lore "%{x::lapis lazuli ore.name.ototopla}%" to run function OtomatikSatOtomatikToplaguncel({_p}, "ototopla", "lapis lazuli ore")
+	
+# -------------------------------------------------------------------------------------------
+on break:
+	event-block is lapis lazuli ore
+	set {_t} to "%event-block%"
+	if {otosat::%{_t}%::%player%} is true:
+		set {_player'sgroup} to player's group
+		
+		# Sadece burayı ayarla.
+		# -------------------------------------------------------------------------------------------
+		OtomatikSatOtomatikToplaOtosatİslem(player, 64, event-block, "%{_player'sgroup}%", "Acemi", 1000, 9, 99, "Acemi", "Çaylak", "Tecrübeli", "Kahraman", "Efsane")		
+		
+		#şu şekilde! OtomatikSatOtomatikToplaOtosatİslem(player, kaçblokkırdığında, event-block, "%{_player'sgroup}%", "Hangi gruba sahip olduğunda", kaçparaversin, minrandomexp, maxrandomexp, #bundan sonra olanlar kalsın#"Acemi", "Çaylak", "Tecrübeli", "Kahraman", "Efsane")	
+		
+		# -------------------------------------------------------------------------------------------
+		# Gerisini bırak
+	if {ototopla::%{_t}%::%player%} is true:
+		OtomatikSatOtomatikToplaOtotoplaİslem(player, event-block) # Ayarlı değil!Ayarlı değil!
+	if chance of 1%:
+		set block at event-block to gold ore
+command /otomatik:
+	trigger:
+		OtomatikSatOtomatikToplamenu(player)
+		stop trigger
+command /deneme:
+	trigger:
+		send "%{otosat::lapis lazuli ore::%player%}%"
+function OtomatikSatOtomatikToplaOtotoplaİslem(p : player, block: location):
+	send "%block at {_block}%" to {_p}
+function OtomatikSatOtomatikToplaOtosatİslem(p : player, amountItem: integer, dropItem: material, grup: text, gerekengrup: text, para : integer, random1: integer, random2: integer, grups1: text, grups2: text, grups3: text, grups4: text, grups5: text):
+	{_p} has {_amountItem} of {_dropItem}
+	"%{_grup}%" is "%{_grups1}%", "%{_grups2}%", "%{_grups3}%", "%{_grups4}%" or "%{_grups5}%"
+	if {_p}'s group is "%{_gerekengrup}%":
+		remove {_amountItem} of {_dropItem} from {_p}
+		add {_para} to {_p}'s balance
+		chance of 5%
+		set {_n} to a random integer between {_random1} and {_random2}
+		make console execute command "/exp %{_n}% %{_p}%"
+		set action bar of {_p} to coloured "&e+&6%{_n}% &eEXP"
+	else:
+		stop
+function OtomatikSatOtomatikToplamenu(p : player):
+	open virtual chest with size 3 named "Otomatikler" to {_p}
+	make gui slot 0 of {_p} with lapis to nothing
+	make gui slot 1 of {_p} with redstone to nothing
+	make gui slot 2 of {_p} with coal item to nothing
+	make gui slot 3 of {_p} with iron ingot to nothing
+	make gui slot 4 of {_p} with gold ingot to nothing
+	make gui slot 5 of {_p} with diamond to nothing
+	make gui slot 6 of {_p} with emerald to nothing
+	make gui slot 7 of {_p} with quartz to nothing
+	make gui slot 8 of {_p} with mob spawner to nothing
+	OtomatikSatOtomatikToplacontrol({_p})
+function OtomatikSatOtomatikToplaguncel(p : player, secim: text, tip: text):
+	if {%{_secim}%::%{_tip}%::%{_p}%} is not set:
+		set {%{_secim}%::%{_tip}%::%{_p}%} to true
+		OtomatikSatOtomatikToplacontrol({_p})
+		stop
+	if {%{_secim}%::%{_tip}%::%{_p}%} is set:
+		delete {%{_secim}%::%{_tip}%::%{_p}%}
+		OtomatikSatOtomatikToplacontrol({_p})
+		stop
+function OtomatikSatOtomatikToplaVariable(p : player, tip : text, tur : text):
+	if {%{_tip}%::%{_tur}%::%{_p}%} is set:
+		set {x::%{_tur}%.item.%{_tip}%} to light green dye
+		set {x::%{_tur}%.name.%{_tip}%} to "||&r   &8&l>&a  &lAktif&8  &l<&r  ||&r"
+		stop
+	set {x::%{_tur}%.item.%{_tip}%} to gray dye
+	set {x::%{_tur}%.name.%{_tip}%} to "||&r   &8&l>&c  &lKapalı&8  &l<&r  ||&r"
+on load:
+	delete {otosat::*}
+	delete {ototopla::*}
+	delete {x::*}
+command /name:
+	trigger:
+		send "%tool of player%"
+		stop trigger
