@@ -1,0 +1,52 @@
+#
+#  Eklenecekler;
+#    Verdiği emeğe göre seviye atlanacak ve seviyeye göre değerli eşyalar verilecek.
+#    Örn: haftada 5 vote atınca ve toplam 20 dk durunca demire yerine altın verilcek gibi
+#
+#Purge variables: (with Tuske)
+#	{spawnerDepo::%player%::*}
+#	{benzinSpawnerPlayer::%player%}
+command /spawner:
+	trigger:
+		spawnerReset(player)
+function spawnerReset(p : player):
+	open virtual hopper with size 1 named "&1Spawner" to {_p}
+	make gui slot 0 of {_p} with paper named "&eSpawner Bilgi" with lore "", "&f• Menü Spawner nedir?", "", "&f• &7Spawner için farm yapmanızı", "&7gerektirmeyen ve hızlı değerli", "&7itemlerini kazandıran sunucumuza", "&7özel bir sistemdir.", "", "&fNasıl çalıştırılır?", "", "&f• &7Yanındaki benzin butona tıklayarak", "&7kömür atarak benzini doldurabilirsiniz.", "&7Ne kadar benzin varsa o kadar", "&7değerli item kazanırsınız.", "", "&f• Her 1 dakika'da çantaya elmas eklenir." and "" to nothing
+	make gui slot 1 and 3 of {_p} with black stained glass pane to nothing
+	{benzinSpawnerPlayer::%{_p}%} is not set:
+		set {_x} to 0
+	{benzinSpawnerPlayer::%{_p}%} is set:
+		set {_x} to {benzinSpawnerPlayer::%{_p}%}
+	make gui slot 4 of {_p} with coal named "&eBenzin doldurmak için tıkla" with lore "", "&3Benzin miktarı &f» &b%{_x}%" and "" to run function spawnerBenzinDoldur({_p})
+	if {spawnerDepo::%{_p}%::*} is set:
+		make gui slot 2 of {_p} with chest named "&eÇantam" with lore "", "&3%size of {spawnerDepo::%{_p}%::*}% adet &belmas" and "" to run function spawnerTopla({_p})
+	{spawnerDepo::%{_p}%::*} is not set
+	make gui slot 2 of {_p} with empty flower pot named "&cÇantan bomboş." with lore "", "&fYenilemek için tıkla." and "" to run function spawnerReset({_p})
+function spawnerTopla(p : player):
+	make gui slot 2 of {_p} with hopper named "&eToplanıyor..." to nothing
+	loop {spawnerDepo::%{_p}%::*}:
+		if {_p} have not enough space for loop-value:
+			make gui slot 2 of {_p} with barrier named "&cEnvanterin dolu. Yer açmalısın!" to nothing
+			wait 3 seconds
+		{_p} has enough space for loop-value
+		remove loop-value from {spawnerDepo::%{_p}%::*}
+		add loop-value to {_p}'s inventory
+	spawnerReset({_p})
+function spawnerBenzinDoldur(p : player):
+	open virtual chest with size 3 named "&0Kömür biriktirdin mi?" to {_p}
+	make gui slot 26 of {_p} with red stained glass pane named "&cGeri dön" to run function spawnerReset({_p})
+on inventory close:
+	display name of event-inventory is "&0Kömür biriktirdin mi?"
+	items in event-inventory is set
+	add amount of coal in event-inventory to {benzinSpawnerPlayer::%player%}
+	loop items in event-inventory:
+		loop-value is not red stained glass pane named "&cGeri dön"
+		loop-value is not coal
+		add loop-value to player's inventory
+every 1 minutes:
+	loop all players:
+		if {benzinSpawnerPlayer::%loop-player%} is bigger than 0:
+			remove 1 from {benzinSpawnerPlayer::%loop-player%}
+			add 1 of diamond to {spawnerDepo::%loop-player%::*}
+		else if {benzinSpawnerPlayer::%loop-player%} is equal to 0:
+			delete {benzinSpawnerPlayer::%loop-player%}
