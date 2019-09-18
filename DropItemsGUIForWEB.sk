@@ -1,0 +1,33 @@
+command /depoadmin [<text>] [<offline player>]:
+	#executable by: console
+	trigger:
+		if arg-1 is "episode1":
+			set {_item} to tool of player
+			add {_item} to {depo::%arg-2%::*}
+			give player {_item}
+		#contuine
+command /depo:
+	trigger:
+		depoPlayer(player)
+function depoPlayer(p : player):
+	open virtual chest with size 5 named "&6Depolarım" to {_p}
+	set {_x} to 0
+	loop {depo::%{_p}%::*}:
+		make gui slot {_x} of {_p} with loop-value to nothing
+		add 1 to {_x}
+	if {depo::%{_p}%::*} is not set:
+		make gui slot 44 of {_p} with barrier with lore "&cDepon boş!" to nothing
+	else:
+		make gui slot 44 of {_p} with red glass pane named "&6Topla loo!" to run function depoTopla({_p})
+	make gui slot integers between {_x} and 43 of {_p} with black glass pane with lore "", "", "", "" to nothing
+function depoTopla(p : player):
+	make gui slot 44 of {_p} with barrier named "&aToplanıyor.." to nothing
+	loop {depo::%{_p}%::*}:
+		if {_p} has enough space for loop-value:
+			add loop-value to {_p}'s inventory
+			remove loop-value from {depo::%{_p}%::*}
+	depoPlayer({_p})
+	if {depo::%{_p}%::*} is set:
+		make gui slot 44 of {_p} with barrier named "&4Yer yok." with lore "&cEnvanterde yer kalmadı.", "&cDiğer perşömenler saklanıyor.." to nothing
+		wait 3 seconds
+		make gui slot 44 of {_p} with red glass pane named "&6Topla loo!" to run function depoTopla({_p})
