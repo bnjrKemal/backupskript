@@ -1,0 +1,37 @@
+# (with TuSKe)
+# {bagisdeposu::%player%::*}
+# {sneak::%player%}
+on drop:
+	cancel event
+	open virtual chest with size 6 named "&2Çevremizi temiz tutalım." to player
+on rightclick on player:
+	player is sneaking
+	clicked entity is player
+	set {sneak::%player%} to "%clicked entity%"
+	open virtual chest with size 6 named "&eEşyalarını buraya bırak." to player
+on inventory close:
+	display name of event-inventory is "&eEşyalarını buraya bırak."
+	if items in event-inventory is set:
+		set {_player} to ({sneak::%player%} parsed as offline player)
+		add items in event-inventory to {bagisdeposu::%{_player}%::*}
+	delete {sneak::%player%}
+command /bağışdeposu:
+	trigger:
+		open virtual chest with size 6 named "&7Bağış depolarım" to player
+		bagisDeposuMenu(player)
+function bagisDeposuMenu(p : player):
+	set {_n} to 0
+	loop {bagisdeposu::%{_p}%::*}:
+		make gui slot {_n} of {_p} with loop-value to nothing
+		add 1 to {_n}
+	make gui slot integers between {_n} and 52 of {_p} with black stained glass pane to nothing
+	if {bagisdeposu::%{_p}%::*} is not set:
+		make gui slot 53 of {_p} with barrier named "&4Boş" with lore "&cŞimdiden kimse seninle bağış yapmadı." to nothing
+	else:
+		make gui slot 53 of {_p} with green stained glass pane named "&2Topla" with lore "&aToplamak için tıkla." to run function bagisDeposuTopla({_p})
+function bagisDeposuTopla(p : player):
+	loop {bagisdeposu::%{_p}%::*}:
+		{_p} has enough space for loop-value
+		add loop-value to {_p}'s inventory
+		remove loop-value from {bagisdeposu::%{_p}%::*}
+	bagisDeposuMenu({_p})
