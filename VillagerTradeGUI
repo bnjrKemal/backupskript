@@ -1,0 +1,132 @@
+command /takas:
+	trigger:
+		menu(player)
+# --------------------------------------------
+function menu(p: player):
+	open virtual chest with size 2 named "&0&lTakas Sistemi" to {_p}
+	make gui slot 0 of {_p} with emerald named "&3Bonus" with lore "&7• 16 Nyks'a 1 bonus al!||&f• Nyks itemlerini zararlı||&fmoblardan düşürebilirsiniz." to run function adet({_p}, 16, quartz, 1, emerald, "&e&k&liii&r &b&lNyks &e&k&liii&r", "", "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "")
+	make gui slot 1 of {_p} with sponge named "&3Sünger" with lore "&7• 1 bonusa 1 sünger al!" to run function adet({_p}, 1, emerald, 1, sponge, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "", "")
+	make gui slot 2 of {_p} with ender stone named "&3End Taşı" with lore "&7• 1 bonusa 2 end taşı al!" to run function adet({_p}, 1, emerald, 2, ender stone, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "", "")
+	make gui slot 3 of {_p} with paper named "&3Para" with lore "&7• 1 bonusa 2 M para çeki al!||&f• Money Money Money." to run function adet({_p}, 1, emerald, 1, paper, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "&32.000.000 Para Çeki", "")
+	make gui slot 4 of {_p} with chest named "&3Kasalar" with lore "&7• Bonuslarla kasa sandığı al!" to run function kasa({_p})
+	make gui slot 5 of {_p} with exp named "&3EXP" with lore "&7• 1 bonusa 50 XP al!||&f• &c/enchmarket&f'e yarar." to run function adet({_p}, 1, emerald, 1, exp, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "&a&l50 XP", "")
+	make gui slot 6 of {_p} with mob spawner named "&3Bonus » Spawner" with lore "&7• Bonuslarla spawner al!" to run function itemtocmd({_p})
+	make gui slot 7 of {_p} with mob spawner named "&3Spawner » Spawner" with lore "&7• Eski pawnerlerle daha iyisi||&7olan spawnerlerini değiştir!" to run function sptosp({_p})
+	make gui slot 8 of {_p} with diamond pickaxe named "&6Obsidyen Kazması" with lore "&7• 8 bonus'a 1 Obsidyen Kazmasını al!" to run function adet({_p}, 8, emerald, 1, diamond pickaxe of efficiency 4, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "&6Obsidyen Kazması", "")
+	make gui slot 9 of {_p} with diamond pickaxe named "&3Spawner Kazması" with lore "&7• 64 Bonus'a 1 Spawner Kazmasını al!||&f• Spawner kazması verir." to run function adet({_p}, 64, emerald, 1, diamond pickaxe of efficiency 15, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "&a&lSpawner Kazması", "")
+# --------------------------------------------
+function adet(p: player, sayi1: integer, item1: material, sayi2: integer, item2: material, name1: text, lore1: text, name2: text, lore2: text):
+	if {_name1} is "":
+		set {_name1x} to "%{_item1}%"
+	if {_name2} is "":
+		set {_name2x} to "%{_item2}%"
+	if {_name1} is not "":
+		set {_name1x} to "%{_name1}%"
+	if {_name2} is not "":
+		set {_name2x} to "%{_name2}%"
+	open virtual chest with size 5 named "&0Onaylama" to {_p}
+	make gui slot 19 of {_p} with stained glass pane:5 named "&2Onaylıyorum" with lore "||&c%{_sayi1}% %{_name1x}%||&a%{_sayi2}% %{_name2x}%||&f" to run function onay({_p}, 1, {_sayi1}, {_item1}, {_sayi2}, {_item2}, {_name1}, {_lore1}, {_name2}, {_lore2})
+	make gui slot 20 of {_p} with stained glass pane:5 named "&2Onaylıyorum" with lore "||&c%{_sayi1}*2% %{_name1x}%||&a%{_sayi2}*2% %{_name2x}%||&f" to run function onay({_p}, 2, {_sayi1}, {_item1}, {_sayi2}, {_item2}, {_name1}, {_lore1}, {_name2}, {_lore2})
+	make gui slot 21 of {_p} with stained glass pane:5 named "&2Onaylıyorum" with lore "||&c%{_sayi1}*4% %{_name1x}%||&a%{_sayi2}*4% %{_name2x}%||&f" to run function onay({_p}, 4, {_sayi1}, {_item1}, {_sayi2}, {_item2}, {_name1}, {_lore1}, {_name2}, {_lore2})
+	make gui slot 22 of {_p} with stained glass pane:5 named "&2Onaylıyorum" with lore "||&c%{_sayi1}*8% %{_name1x}%||&a%{_sayi2}*8% %{_name2x}%||&f" to run function onay({_p}, 8, {_sayi1}, {_item1}, {_sayi2}, {_item2}, {_name1}, {_lore1}, {_name2}, {_lore2})
+	make gui slot 23 of {_p} with stained glass pane:5 named "&2Onaylıyorum" with lore "||&c%{_sayi1}*16% %{_name1x}%||&a%{_sayi2}*16% %{_name2x}%||&f" to run function onay({_p}, 16, {_sayi1}, {_item1}, {_sayi2}, {_item2}, {_name1}, {_lore1}, {_name2}, {_lore2})
+	make gui slot 24 of {_p} with stained glass pane:5 named "&2Onaylıyorum" with lore "||&c%{_sayi1}*32% %{_name1x}%||&a%{_sayi2}*32% %{_name2x}%||&f" to run function onay({_p}, 32, {_sayi1}, {_item1}, {_sayi2}, {_item2}, {_name1}, {_lore1}, {_name2}, {_lore2})
+	make gui slot 25 of {_p} with stained glass pane:5 named "&2Onaylıyorum" with lore "||&c%{_sayi1}*64% %{_name1x}%||&a%{_sayi2}*64% %{_name2x}%||&f" to run function onay({_p}, 64, {_sayi1}, {_item1}, {_sayi2}, {_item2}, {_name1}, {_lore1}, {_name2}, {_lore2})
+	make gui slot 4 of {_p} with skull of {_p} named "&4Geri dön." to run function menu({_p})
+function onay(p: player, katsayi: integer, sayi1: integer, item1: material, sayi2: integer, item2:material, name1: text, lore1: text, name2: text, lore2: text):
+	set {_sonucsayi1} to {_sayi1} * {_katsayi}
+	set {_sonucsayi2} to {_sayi2} * {_katsayi}
+	if {_name1} is "&f&lNether Yıldız":
+		if {_name2} is "&a&lSpawner Kazması":
+			if amount of {_item1} named "%{_name1}%" in {_p}'s inventory is bigger than or equal to {_sayi1} * {_katsayi}:
+				remove {_sonucsayi1} of {_item1} named "%{_name1}%" from {_p}
+				enchant {_item2} with "efficiency 15" parsed as enchantment type
+				give {_sonucsayi2} of {_item2} named "%{_name2}%" to {_p}
+				stop
+	if ({_lore1}, {_lore2}, {_name1} and {_name2}) is "":
+		if amount of {_item1} in {_p}'s inventory is bigger than or equal to {_sayi1} * {_katsayi}:
+			remove {_sonucsayi1} of {_item1} from {_p}
+			give {_sonucsayi2} of {_item2} to {_p}
+			stop
+		else:
+			send "&e&lSanal Takas &f» &cİstediğin kadar itemin yok. (32. line)" to {_p}
+			stop
+	if {_lore1} and {_lore2} is "":
+		if {_name1} is not "":
+			if amount of {_item1} named "%{_name1}%" in {_p}'s inventory is bigger than or equal to {_sayi1} * {_katsayi}:
+				if {_name2} is "":
+					remove {_sonucsayi1} of {_item1} named "%{_name1}%" from {_p}
+					give {_sonucsayi2} of {_item2} to {_p}
+					stop
+				if {_name2} is not "":
+					remove {_sonucsayi1} of {_item1} named "%{_name1}%" from {_p}
+					give {_sonucsayi2} of {_item2} named "%{_name2}%" to {_p}
+					stop
+			else:
+				send "&e&lSanal Takas &f» &cİstediğin kadar itemin yok. (51. line)" to {_p}
+				stop
+		if {_name1} is "":
+			if amount of {_item1} in {_p}'s inventory is bigger than or equal to {_sayi1} * {_katsayi}:
+				if {_name2} is not "":
+					remove {_sonucsayi1} of {_item1} from {_p}
+					give {_sonucsayi2} of {_item2} named "%{_name2}%" to {_p}
+					stop
+			else:
+				send "&e&lSanal Takas &f» &cİstediğin kadar itemin yok. (51. line)" to {_p}
+				stop
+	send "&e&lSanal Takas &f» &cHata oluştu. Lütfen yetkililere bildirin. Eğer bildirirsen Elmas Blok Spawner kazanırsın. (53. line)" to {_p}
+function kasa(p: player):
+	open virtual chest with size 1 named "&0&lKasalar" to {_p}
+	make gui slot 1 of {_p} with chest named "&3Spawner Kasası" with lore "&7• 4 Bonus'a Spawner Kasası al!" to run function adet({_p}, 4, emerald, 1, chest, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "&bSpawner Kasası", "")
+	make gui slot 2 of {_p} with chest named "&3Sihirli Kasası" with lore "&7• 8 Bonus'a Sihirli Kasası al!" to run function adet({_p}, 8, emerald, 1, chest, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "&bSihirli Kasası", "")
+	make gui slot 3 of {_p} with chest named "&3Nadir Kasası" with lore "&7• 8 Bonus'a Nadir Kasası al!" to run function adet({_p}, 8, emerald, 1, chest, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "&bNadir Kasası", "")
+	make gui slot 4 of {_p} with chest named "&3Oylama Kasası" with lore "&7• 12 Bonus'a Oylama Kasası al!" to run function adet({_p}, 12, emerald, 1, chest, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "&bOylama Kasası", "")
+	make gui slot 5 of {_p} with chest named "&3Event Kasası" with lore "&7• 16 Bonus'a Event Kasası al!" to run function adet({_p}, 16, emerald, 1, chest, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "&bEvent Kasası", "")
+	make gui slot 6 of {_p} with chest named "&3Sünger Kasası" with lore "&7• 4 Bonus'a Sünger Kasası al!" to run function adet({_p}, 4, emerald, 1, chest, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "", "&bSünger Kasası", "")
+	make gui slot 8 of {_p} with skull of {_p} named "&4Geri dön." to run function menu({_p})
+function itemtocmd(p: player):
+	open virtual chest with size 2 named "&0&lSpawnerler" to {_p}
+	make gui slot 0 of {_p} with mob spawner named "&3Blaze Doğurucusu" with lore "&7• 4 Bonus'a Blaze SP al!" to run function cmd({_p}, 4, emerald, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "blaze")
+	make gui slot 1 of {_p} with mob spawner named "&3Wolf Doğurucusu" with lore "&7• 4 Bonus'a Wolf SP al!" to run function cmd({_p}, 4, emerald, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "wolf")
+	make gui slot 2 of {_p} with mob spawner named "&3İnek Doğurucusu" with lore "&7• 4 Bonus'a İnek SP al!" to run function cmd({_p}, 4, emerald, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "cow")
+	make gui slot 3 of {_p} with mob spawner named "&3Tavuk Doğurucusu" with lore "&7• 4 Bonus'a Tavuk SP al!" to run function cmd({_p}, 4, emerald, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "chicken")
+	make gui slot 4 of {_p} with mob spawner named "&3Koyun Doğurucusu" with lore "&7• 4 Bonus'a Koyun SP al!" to run function cmd({_p}, 4, emerald, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "sheep")
+	make gui slot 5 of {_p} with mob spawner named "&3Domuz Doğurucusu" with lore "&7• 4 Bonus'a Domuz SP al!" to run function cmd({_p}, 4, emerald, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "pig")
+	make gui slot 6 of {_p} with mob spawner named "&3Tavşan Doğurucusu" with lore "&7• 4 Bonus'a Tavşan SP al!" to run function cmd({_p}, 4, emerald, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "rabbit")
+	make gui slot 7 of {_p} with mob spawner named "&3Mööntar Doğurucusu" with lore "&7• 4 Bonus'a Mööntar SP al!" to run function cmd({_p}, 4, emerald, "&f&k&liii&r &2&lB&a&lo&2&ln&a&lu&2&ls &f&k&liii", "mooshroom")
+	make gui slot 8 of {_p} with mob spawner named "&3Elmas Doğurucusu" with lore "&7• 16 Spawner küpüne Elmas SP al!" to run function cmd({_p}, 16, magma cream, "&6&lSpawner Küpü", "elmas")
+	make gui slot 13 of {_p} with skull of {_p} named "&4Geri dön." to run function menu({_p})
+function cmd(p: player, sayi: integer, item: material, name: text, cmd: text):
+	if amount of {_item} named "%{_name}%" in {_p}'s inventory is bigger than or equal to {_sayi}:
+		if {_cmd} is "elmas":
+			remove {_sayi} of {_item} named "%{_name}%" from {_p}
+			execute console command "itemsp ver %{_p}% %{_cmd}% 1"
+		else:
+			remove {_sayi} of {_item} named "%{_name}%" from {_p}
+			execute console command "ss give %{_p}% %{_cmd}% 1"
+			stop
+	else:
+		send "&e&lSanal Takas &f» &cİstediğin kadar itemin yok. (78. line)" to {_p}
+		stop
+function sptosp(p: player):
+	open virtual chest with size 2 named "&0&lSpawnerler" to {_p}
+	make gui slot 0 of {_p} with mob spawner named "&3Altın Doğurucusu" with lore "&7• 3 Demir SP'ye 1 Altın SP al!" to run function sptospcmd({_p}, 3, "Demir", 1, "altin")
+	make gui slot 1 of {_p} with mob spawner named "&3Zümrüt Doğurucusu" with lore "&7• 3 Altın SP'ye 1 Zümrüt SP al!" to run function sptospcmd({_p}, 3, "Altın", 1, "zumrut")
+	make gui slot 2 of {_p} with mob spawner named "&3Elmas Doğurucusu" with lore "&7• 2 Zümrüt SP'ye 1 Elmas SP al!" to run function sptospcmd({_p}, 2, "Zümrüt", 1, "elmas")
+	make gui slot 3 of {_p} with mob spawner named "&3Prizmarin Doğurucusu" with lore "&7• 3 Elmas SP'ye 1 Prizmarin SP al!" to run function sptospcmd({_p}, 3, "Elmas", 1, "prizmarin")
+	make gui slot 4 of {_p} with mob spawner named "&3Elmas Doğurucusu" with lore "&7•  1 Prizmarin SP'ye 3 Elmas SP al!" to run function sptospcmd({_p}, 1, "Prizmarin", 3, "elmas")
+	make gui slot 5 of {_p} with mob spawner named "&3Demir Blok Doğurucusu" with lore "&7•  9 Demir SP'ye 1 Demir Blok SP al!" to run function sptospcmd({_p}, 9, "Demir", 1, "demirblok")
+	make gui slot 6 of {_p} with mob spawner named "&3Altın Blok Doğurucusu" with lore "&7•  9 Altın SP'ye 1 Altın Blok SP al!" to run function sptospcmd({_p}, 9, "Altın", 1, "altinblok")
+	make gui slot 7 of {_p} with mob spawner named "&3Zümrüt Blok Doğurucusu" with lore "&7•  9 Zümrüt SP'ye 1 Zümrüt Blok SP al!" to run function sptospcmd({_p}, 9, "Zümrüt", 1, "zumrutblok")
+	make gui slot 8 of {_p} with mob spawner named "&3Elmas Blok Doğurucusu" with lore "&7•  9 Elmas SP'ye 1 Elmas Blok SP al!" to run function sptospcmd({_p}, 9, "Elmas", 1, "elmasblok")
+	make gui slot 9 of {_p} with mob spawner named "&3Altın Blok Doğurucusu" with lore "&7• 3 Demir Blok SP'ye 1 Altın Blok SP al!" to run function sptospcmd({_p}, 3, "Demir Blok", 1, "altinblok")
+	make gui slot 10 of {_p} with mob spawner named "&3Zümrüt Blok Doğurucusu" with lore "&7• 3 Altın Blok SP'ye 1 Zümrüt Blok SP al!" to run function sptospcmd({_p}, 3, "Altın Blok", 1, "zumrutblok")
+	make gui slot 11 of {_p} with mob spawner named "&3Elmas Blok Doğurucusu" with lore "&7• 2 Zümrüt Blok SP'ye 1 Elmas Blok SP al!" to run function sptospcmd({_p}, 2, "Zümrüt Blok", 1, "elmasblok")
+	make gui slot 17 of {_p} with skull of {_p} named "&4Geri dön." to run function menu({_p})
+function sptospcmd(p: player, sayi1: integer, name1: text, sayi2: integer, name2: text):
+	if amount of mob spawner named "&9%{_name1}% &eDoğurucusu" with lore "&b&lEien&3&lMC &f&lİyi Oyunlar!" in {_p}'s inventory is bigger than or equal to {_sayi1}:
+		remove {_sayi1} of mob spawner named "&9%{_name1}% &eDoğurucusu" with lore "&b&lEien&3&lMC &f&lİyi Oyunlar!" from {_p}
+		execute console command "itemsp ver %{_p}% %{_name2}% %{_sayi2}%"
+	else:
+		send "&e&lSanal Takas &f» &cİstediğin kadar itemin yok. (100. line)" to {_p}
+		stop
