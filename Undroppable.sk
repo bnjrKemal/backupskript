@@ -1,0 +1,132 @@
+options:
+	menuGUI: &b&lParşömen
+	menu2GUI: &1Parşömenlerim
+	NameOfSlot: &6Koruma kitabı satın al
+	LoreOfSlot: " ", "&f• Koruma kitabı satın almak için", "&f%{_ucret}% TL ödemelisiniz.", " ", "&eHesabınızdaki para miktarı: %{_p}'s balance%", " ", "&7by &a@bnjrKemal"
+	ucret: 50000000
+	NameOfEnchantedItem: &b&l**&a Düşmez &b&l**
+	ReallyItemID: 1 of paper
+	NameOfKorumalıKitapItemID: &6&lKoruma Kitabı 
+	LoreOfKorumalıKitapItemID: " ", "&f• Koruma Kitabı ne işe yarıyor?", " ", " &eKoruma kitabıyla basılmış eşyaların", "&eöldürülen kişinin envanterden", "&edüşmesini engeller.", " "
+	YetersizPara: &4Yetersiz para.
+	YetersizParaAçıklama: " ", "&e• &cHesabınızda %{_ucret}% TL ve üstü olmalı.", " "
+	SatınAlındı: &2Ödendi.
+	SatınAlındıAçıklama: " ", "&e• &aBaşarıyla hesabınızdan %{_ucret}% TL", "&açekildi ve &dKoruma kitabı &averildi.", " "
+	NameOFullInv: &4Envanteriniz dolu.
+	LoreOfFullInv: " ", "&f• &cKoruma kitabı için envanterinize yer açın.", " "
+	parsomenlerimkomutbilgi: &cKorumalı itemlerin &7/parşömenlerim&c'de saklanıyor, geri alabilirsiniz.
+	NONEparsomenlerimkomutbilgiItemID: black stained glass pane
+	NONEparsomenlerimkomutbilgiItemName: "", "", "", "", ""
+	TOPLAparsomenlerimkomutbilgiItemID: red stained glass pane
+	TOPLAparsomenlerimkomutbilgiItemName: &6TOPLA
+	TOPLANIYORparsomenlerimkomutbilgiItemID: barrier
+	TOPLANIYORparsomenlerimkomutbilgiItemName: &cToplanıyor..
+command /parşömen:
+	trigger:
+		open virtual chest with size 1 named "{@menuGUI}" to player
+		parsomenmenu(player)
+		stop trigger
+function parsomenmenu(p : player):
+	set {_ucret} to {@ucret}
+	make gui slot 4 of {_p} with paper named "{@NameOfSlot}" with lore {@LoreOfSlot} to run function parsomen({_p})
+function parsomen(p : player):
+	if {_p} has enough space for 1 of paper named "{@NameOfSlot}" with lore {@LoreOfSlot}:
+		set {_ucret} to {@ucret}
+		if {_p}'s balance is bigger than or equal to {@ucret}:
+			remove {@ucret} from {_p}'s balance
+			give {@ReallyItemID} named "{@NameOfKorumalıKitapItemID}" with lore {@LoreOfKorumalıKitapItemID} to {_p}
+			make gui slot 4 of {_p} with emerald named "{@SatınAlındı}" with lore {@SatınAlındıAçıklama} to nothing
+			wait 3 seconds
+			parsomenmenu({_p})
+		else:
+			make gui slot 4 of {_p} with barrier named "{@YetersizPara}" with lore {@YetersizParaAçıklama} to nothing
+			wait 3 seconds
+			parsomenmenu({_p})
+	else:
+		make gui slot 4 of {_p} with barrier named "{@NameOFullInv}" with lore {@LoreOfFullInv} to nothing
+		wait 3 seconds
+		parsomenmenu({_p})
+on inventory click:
+	cursor slot of player is {@ReallyItemID} named "{@NameOfKorumalıKitapItemID}" with lore {@LoreOfKorumalıKitapItemID}
+	clicked item is not air
+	"%lore of clicked item%" does not contain "{@NameOfEnchantedItem}"
+	clicked item is not {@ReallyItemID} named "{@NameOfKorumalıKitapItemID}" with lore {@LoreOfKorumalıKitapItemID}
+	remove 1 of cursor slot of player from cursor slot of player
+	cancel event
+	if lore of clicked item is set:
+		set lore of clicked item to lore of clicked item , "{@NameOfEnchantedItem}"
+		stop
+	set lore of clicked item to "{@NameOfEnchantedItem}"
+on damage:
+	victim is player
+	attacker is player
+	set {nowNoBug::%victim%} to now
+on load:
+	LoadUnload()
+on unload:
+	LoadUnload()
+function LoadUnload():
+	loop {nowNoBug::*}:
+		difference between loop-value and now is bigger than or equal to 30 seconds
+		delete loop-value
+on death of player:
+	if attacker is not player:
+		difference between {nowNoBug::%victim%} and now is bigger than or equal to 30 seconds
+		add drops to {verilecek::%victim%::*}
+		clear drops
+		stop
+	set {_drops.%victim%::*} to drops
+	loop {_drops.%victim%::*}:
+		if "%lore of loop-value%" contains "{@NameOfEnchantedItem}":
+			add loop-value to {verilecek::%victim%::*}
+			remove loop-value from the drops
+			set {_x} to true
+		if loop-value is {@ReallyItemID} named "{@NameOfKorumalıKitapItemID}" with lore {@LoreOfKorumalıKitapItemID}:
+			add loop-value to {verilecek::%victim%::*}
+			remove loop-value from the drops
+command /parşömenlerim:
+	trigger:
+		parsomenReset(player)
+function parsomenReset(p : player):
+	set {_n} to 0
+	open virtual chest with size 6 named "{@menu2GUI}" to {_p}
+	set {_slots::*} to integers between 0 and 52
+	loop {verilecek::%{_p}%::*}:
+		make gui slot {_n} of {_p} with loop-value to nothing
+		remove {_n} from {_slots::*}
+		add 1 to {_n}
+	make gui slot {_slots::*} of {_p} with {@NONEparsomenlerimkomutbilgiItemID} named " " with lore {@NONEparsomenlerimkomutbilgiItemName} to nothing
+	if {verilecek::%{_p}%::*} is set:
+		make gui slot 53 of {_p} with {@TOPLAparsomenlerimkomutbilgiItemID} named "{@TOPLAparsomenlerimkomutbilgiItemName}" to run function topla({_p})
+	else:
+		make gui slot 53 of {_p} with barrier named "&4Bomboş" with lore "&cKurtarılacak parşömenlerin kalmadı." to nothing
+function topla(p : player):
+	make gui slot 53 of {_p} with {@TOPLANIYORparsomenlerimkomutbilgiItemID} named "{@TOPLANIYORparsomenlerimkomutbilgiItemName}" to nothing
+	loop {verilecek::%{_p}%::*}:
+		if {_p} has enough space for loop-value:
+			add loop-value to {_p}'s inventory
+			remove loop-value from {verilecek::%{_p}%::*}
+	parsomenReset({_p})
+	if {verilecek::%{_p}%::*} is set:
+		make gui slot 53 of {_p} with barrier named "&4Yer yok." with lore "&cEnvanterde yer kalmadı.", "&cDiğer perşömenler saklanıyor.." to nothing
+		wait 3 seconds
+		make gui slot 53 of {_p} with {@TOPLAparsomenlerimkomutbilgiItemID} named "{@TOPLAparsomenlerimkomutbilgiItemName}" to run function topla({_p})
+on respawn:
+	parsomenMesaj(player)
+on join:
+	parsomenMesaj(player)
+on teleport:
+	parsomenMesaj(player)
+function parsomenMesaj(p : player):
+	{verilecek::%{_p}%::*} is set
+	send title "{@menuGUI}" with subtitle "{@parsomenlerimkomutbilgi}" to {_p} for 5 seconds
+	send "{@menuGUI} {@parsomenlerimkomutbilgi}" to {_p}
+	send action bar "{@menuGUI} {@parsomenlerimkomutbilgi}" to {_p}
+command /bune?:
+	trigger:
+		send "%tool of player%"
+on region enter:
+	if difference between {nowNoBug::%player%} and now is bigger than or equal to 30 seconds:
+		delete {nowNoBug::%player%}
+	{nowNoBug::%player%} is set
+	cancel event
