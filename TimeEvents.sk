@@ -1,0 +1,35 @@
+command /sure:
+	trigger:
+		open virtual chest with size 1 named "&3Süre ödülü" to player
+		odulsure(player)
+function odulsure(p: player):
+	if {odulsure::%{_p}%} is not set:
+		set {_pl} to "&6Tıkla ve başla!||&f ||&cOyundan çıkarsan süre iptal edilir!"
+	else:
+		set {_sure} to {odulsure::%{_p}%}
+		add 1 hour to {_sure}
+		if {_sure} is smaller than or equal to now:
+			set {_pl} to "&aTıkla ve ödülünü al!"
+			make gui slot 4 of {_p} with emerald named "&aSünger" with lore "&7• 1 saat dur 8 sünger kazan!||||%{_pl}%" to run function odulver({_p})
+			stop trigger
+		if {_sure} is bigger than now:
+			set {_pl} to "&aAlacağın tarih:||&d%{_sure}%||&f ||&cOyundan çıkarsan süre iptal edilir!"
+			make gui slot 4 of {_p} with emerald named "&aSünger" with lore "&7• 1 saat dur 8 sünger kazan!||||%{_pl}%" to nothing
+			stop trigger
+	make gui slot 4 of {_p} with emerald named "&aSünger" with lore "&7• 1 saat dur 8 sünger kazan!||||%{_pl}%" to run function sureodul({_p})
+function sureodul(p: player):
+	if {odulsure::%{_p}%} is not set:
+		set {odulsure::%{_p}%} to now
+		send "&a&lSüre Ödülü &f&l» &aBaşarıyla başladın!" to {_p}
+		odulsure({_p})
+function odulver(p: player):
+	set {odulsure::%{_p}%} to now
+	give 8 sponge to {_p}
+	send "&a&lSüre Ödülü &f&l» &e8 sünger &everildi!" to {_p}
+	odulsure({_p})
+on quit:
+	{odulsure::%player%} is set
+	set {_sure} to {odulsure::%player%}
+	add 1 hours to {_sure}
+	if {_sure} is bigger than now:
+		delete {odulsure::%player%}
