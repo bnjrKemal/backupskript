@@ -1,0 +1,10 @@
+on chat:
+	if message matches ".*[^a-zA-Z0-9üğşçöıÜĞİŞÇ.,:: !?##+%%&§[[]]'/=*Ö_-].*":
+		cancel event
+		send "&4&lUYARI! &fGeçersiz karakterlere izin verilmiyor. %message%" to player
+		log "%player% -> %message%" to "ozelsembol/sohbet.yml"
+on command:
+	if full command matches ".*[^a-zA-Z0-9üğşçöıÜĞİŞÇ.,:: !?##+%%&§'/=*Ö_-].*":
+		cancel event
+		send "&4&lUYARI! &fGeçersiz karakterlere izin verilmiyor. %full command%" to player
+		log "%player% -> /%full command%" to "ozelsembol/komut.yml"
