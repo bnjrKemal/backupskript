@@ -1,0 +1,31 @@
+on load:
+    load yaml "plugins/skript-mirror/LogSaveSK/logged.yml" as "logged.yml"
+on unload:
+    save yaml "logged.yml"
+on log:
+	add logged message to yaml list "logged" of "logged.yml"
+command /log:
+    permission: op
+    trigger:
+        LogSK(player)
+function LogSK(p : player):
+    open virtual chest with 6 row named "Log &7(Silmek için kağıda tıkla)" to {_p}
+    set {_x} to 0
+    loop yaml list "logged" of "logged.yml":
+        if {_x} <= 52:
+            set {_loop-value} to loop-value
+            replace "&" with "§" in {_loop-value}
+            set {_splitlog::*} to split "&c%{_loop-value}%" by 50 characters
+            make gui slot {_x} of {_p} with paper named "&7&l##%{_x} + 1%" with lore {_splitlog::*} to run function LogRemove({_p}, "%loop-value%")
+            add 1 to {_x}
+            set {_lore} to ""
+        else:
+            set {_lore} to "&4Dikkat, &cdoldu!"
+            stop loop
+    make gui slot 53 of {_p} with barrier named "&cTümünü silmek için tıkla." with lore {_lore} to run function LogRemove({_p}, "all")
+function LogRemove(p : player, t: text):
+    if {_t} is "all":
+        delete yaml list "logged" of "logged.yml"
+    else:
+        remove {_t} from yaml list "logged" of "logged.yml"
+    LogSK({_p})
