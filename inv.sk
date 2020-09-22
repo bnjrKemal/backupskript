@@ -1,0 +1,46 @@
+on inventory click:
+	player's gamemode is survival
+	index of event-slot is 17
+	cancel event
+	if uncolored first element out of lore of event-slot parsed as integer is 1:
+		ListingItems(player, 2)
+		stop
+	if uncolored first element out of lore of event-slot parsed as integer is 2:
+		ListingItems(player, 1)
+		stop
+	
+function ListingItems(p : player, yeni : integer):
+	set slot 17 of {_p}'s inventory to air
+	if {_yeni} is 2:
+		set {pageinv::%{_p}%::1::*} to items in {_p}'s inventory
+	if {_yeni} is 1:
+		set {pageinv::%{_p}%::2::*} to items in {_p}'s inventory
+	clear {_p}'s inventory
+	set slot 17 of {_p}'s inventory to PageINV({_yeni})
+	add {pageinv::%{_p}%::%{_yeni}%::*} to {_p}'s inventory
+
+on inventory open:
+	ListingItems(player, uncolored first element out of lore of (slot 17 of player's inventory) parsed as integer)
+
+on inventory close:
+	ListingItems(player, uncolored first element out of lore of (slot 17 of player's inventory) parsed as integer)
+	
+on pickup:
+	ListingItems(player, uncolored first element out of lore of (slot 17 of player's inventory) parsed as integer)
+
+on drop:
+	ListingItems(player, uncolored first element out of lore of (slot 17 of player's inventory) parsed as integer)
+
+on join:
+	if slot 17 of player's inventory is not air:
+		slot 17 of player's inventory is not PageINV(1)
+		drop slot 17 of player's inventory at player
+		stop
+	set slot 17 of player's inventory to PageINV(1)
+	
+function PageINV(i : integer) :: material:
+	set {_} to black stained glass pane named "&cSayfa değiştir"
+	set lore of {_} to "&f%{_i}%"
+	add "&7Sayfa değiştir." to lore of {_}
+	add "" to lore of {_}
+	return {_}
